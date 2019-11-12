@@ -2,191 +2,166 @@ drop database if exists BANK;
 create database BANK;
 use BANK;
 
-drop table if exists Transactions;
+drop table if exists TRANSACTIONS;
 drop table if exists BRANCH;
-drop table if exists Beneficiary;
-drop table if exists Dependents;
-drop table if exists Guarantor;
-drop table if exists EMPOLYEE;
-drop table if exists Customers;
-drop table if exists Deposits;
-drop table if exists Withdraw;
-drop table if exists Guarantee_Customer; 
-drop table if exists Customers_Mbl;
-drop table if exists Guarantor_Mbl;
-drop table if exists Dependents_Mbl;
-drop table if exists Beneficiary_Mbl;
-
+drop table if exists BENIFICERY ;
+drop table if exists DEPENDENTS;
+drop table if exists GUARANTOR;
+drop table if exists EMPLOYEE;
+drop table if exists CUSTOMER;
+drop table if exists DEPOSITS;
+drop table if exists WITHDRAW;
+drop table if exists GUARANTEE_CUSTOMER; 
+drop table if exists CUSTOMER_MBL;
+drop table if exists GUARANTOR_Mbl;
+drop table if exists DEPENDENTS_MBL;
+drop table if exists BENIFICERY_Mbl;
 drop table if exists Security_d;
 drop table if exists Finance_d;
 drop table if exists IT_d;
 drop TABLE if EXISTS LOAN;
 
 
-create table EMPOLYEE(
-	E_Id INT, 
-	DoB DATE, 
-	Email VARCHAR(30), 
-	JoingDate DATE NOT NULL,
-	Fname VARCHAR(30) NOT NULL, 
+create table EMPLOYEE(
+    Fname VARCHAR(30) NOT NULL, 
     Mname VARCHAR(30), 
 	LName VARCHAR(30),
+	E_Id INT, 
     AadharNumber INT,
+    MgrID INT,
     BranchNumber INT,
     DeptName VARCHAR(30),
-    MgrID INT,
-	PRIMARY KEY (E_Id)
+    DateofBirth DATE, 
+    Salary FLOAT,
+	JoingDate DATE NOT NULL,
+    PRIMARY KEY (E_Id)
 );
-create table Customers(
-	Cus_acc_no INT, 
-	DoB DATE,
-    balance INT,
-    HouseNo INT,
-	Fname VARCHAR(30) NOT NULL, 
+create table CUSTOMER(
+    Fname VARCHAR(30) NOT NULL, 
 	Mname VARCHAR(30), 
 	LName VARCHAR(30),
+	Cus_acc_no INT, 
     AadharNumber INT,
+    HouseNumber INT,
+    StreetNumber INT,
     LandMark varchar(30),
+    DateofBirth DATE,
+    Balance FLOAT,
     Sex varchar(30),
     PRIMARY KEY (Cus_acc_no)
 );
-create table Guarantor (
-Cus_acc_no INT,
+create table GUARANTOR (
+
 Account_Number INT,
+Cus_acc_no INT,
 Branch_NO INT,
-G_name INT,
-FOREIGN Key (Cus_acc_no) REFERENCES Customers(Cus_acc_no),
+FOREIGN Key (Cus_acc_no) REFERENCES CUSTOMER(Cus_acc_no),
 Primary Key (Account_Number)
 
 );
 create table BRANCH(
-    Branch_no int,
-    IFCE_Code INT,
+    BranchNumber int,
+    IFSCcode INT,
     Locations varchar(30),
-    B_mgrId INT,
-    Primary Key (Branch_no)
+    BMgr_id INT,
+    Primary Key (BranchNumber)
 
 	
 );
-create table Guarantee_Customer (
+create table GUARANTEE_CUSTOMER (
 Cus_acc_no INT,
 Account_Number INT,
-FOREIGN Key (Cus_acc_no) REFERENCES Customers(Cus_acc_no)
+FOREIGN Key (Cus_acc_no) REFERENCES CUSTOMER(Cus_acc_no)
 
 );
-create table Transactions(
-	Cus_acc_no INT,
-    TRANSACTIONID INT,
-    Amount INT,
-    accType VARchar(20),
+create table TRANSACTIONS(
+	Cust_accnt_number INT,
+    TRANSACTIONID  INT NOT NULL ,
+    Types VARchar(20),
     Primary Key(TRANSACTIONID)
 
 );
-create table Dependents (
+create table DEPENDENTS (
 	E_id INT,
     D_Name VARCHAR(30),
     Relationship varchar(20),
-    DOB date ,
-FOREIGN Key (E_id) REFERENCES EMPOLYEE(E_id),
+    DateofBirth date ,
+FOREIGN Key (E_id) REFERENCES EMPLOYEE(E_id),
 Primary Key(D_Name)
 );
-create table Beneficiary (
+create table BENIFICERY  (
 	Cus_acc_no INT,
     B_Name VARCHAR(30),
     Relationship varchar(20),
     DOB date,
-    FOREIGN Key (Cus_acc_no) REFERENCES Customers(Cus_acc_no),
+    FOREIGN Key (Cus_acc_no) REFERENCES CUSTOMER(Cus_acc_no),
     primary key(B_Name)
 );
-create table Beneficiary_Mbl(
+create table BENIFICERY_MBL(
 Cus_acc_no INT,
 M_no INT,
 B_Name VARCHAR(30),
-FOREIGN Key (Cus_acc_no) REFERENCES Customers(Cus_acc_no),
-FOREIGN Key (B_Name) REFERENCES Beneficiary(B_Name)
+FOREIGN Key (Cus_acc_no) REFERENCES CUSTOMER(Cus_acc_no),
+FOREIGN Key (B_Name) REFERENCES BENIFICERY(B_Name)
 
 
 );
-          
-
-
-
-create table Guarantor_Mbl(
+create table GUARANTOR_MBL(
 G_acc_no INT,
 M_no INT,
 Account_Number INT,
-FOREIGN Key (Account_Number) REFERENCES Guarantor(Account_Number),
-FOREIGN Key (G_acc_no) REFERENCES  Customers(Cus_acc_no)
+FOREIGN Key (Account_Number) REFERENCES GUARANTOR(Account_Number),
+FOREIGN Key (G_acc_no) REFERENCES  CUSTOMER(Cus_acc_no)
 
 
 
 );
-create table  Dependents_Mbl (
+create table  DEPENDENTS_MBL(
 E_Id INT,
 M_no INT,
 D_Name VARCHAR(30), 
-FOREIGN Key (E_Id) REFERENCES EMPOLYEE(E_id),
-FOREIGN Key (D_Name) REFERENCES Dependents(D_Name)
+FOREIGN Key (E_Id) REFERENCES EMPLOYEE(E_id),
+FOREIGN Key (D_Name) REFERENCES DEPENDENTS(D_Name)
 
 
 
 );
-create table Customers_Mbl(
+create table CUSTOMER_Mbl(
 Cus_acc_no INT,
 M_no INT,
-FOREIGN Key (Cus_acc_no) REFERENCES Customers(Cus_acc_no)
+FOREIGN Key (Cus_acc_no) REFERENCES CUSTOMER(Cus_acc_no)
 
 
 );
 
-create table Deposits( 
-     Transaction_id INT,
+create table DEPOSITS( 
      Account_Number INT,
      Branch_Number INT,
-	 FOREIGN Key (Transaction_id) REFERENCES Transactions(TRANSACTIONID),
-      FOREIGN Key (Account_Number) REFERENCES Customers(Cus_acc_no),
-      FOREIGN Key (Branch_Number) REFERENCES BRANCH(Branch_no),
-      PRIMARY KEY (Transaction_id)
-
+     Amount FLOAT,
+	# FOREIGN Key (Transaction_id) REFERENCES TRANSACTIONS(TRANSACTIONID),
+     FOREIGN Key (Account_Number) REFERENCES CUSTOMER(Cus_acc_no),
+	FOREIGN Key (Branch_Number) REFERENCES BRANCH(BranchNumber)
 );
-create table Withdraw( 
+create table WITHDRAW( 
     
+    Account_Number INT,
+    Branch_Number INT,
+    Amount FLOAT,
     
-    Transaction_id INT,
-     Account_Number INT,
-     Branch_Number INT,
-    FOREIGN Key (Transaction_id) REFERENCES Transactions(TRANSACTIONID),
-    FOREIGN Key (Account_Number) REFERENCES Customers(Cus_acc_no),
-    FOREIGN Key (Branch_Number) REFERENCES BRANCH(Branch_no),
-     PRIMARY KEY (Transaction_id)
+    #FOREIGN Key (Transaction_id) REFERENCES TRANSACTIONS(TRANSACTIONID),
+    FOREIGN Key (Account_Number) REFERENCES CUSTOMER(Cus_acc_no),
+    FOREIGN Key (Branch_Number) REFERENCES BRANCH(BranchNumber)
      );
-
-
-
-
-
-
-
-
-
 create table LOAN(
-	Acc_NO INT,
+	AccountNumber INT,
     Branch_Number INT,
     E_ID INT,
-    G_acc_no INT,
-    AMOUNT INT,
-    Rate_of_I FLOAT,
+    Guarantee_accnt_no INT,
+    Amount INT,
+    RateofInterest FLOAT,
     Tenure INT,
-    FOREIGN Key (Acc_NO) REFERENCES Customers(Cus_acc_no),
-    FOREIGN Key (E_ID) REFERENCES EMPOLYEE(E_ID),
-    FOREIGN Key (Branch_Number) REFERENCES BRANCH(Branch_no),
-    FOREIGN Key (G_acc_no) REFERENCES Guarantor(Account_Number)
+    FOREIGN Key (AccountNumber) REFERENCES CUSTOMER(Cus_acc_no),
+    FOREIGN Key (E_ID) REFERENCES EMPLOYEE(E_ID),
+    FOREIGN Key (Branch_Number) REFERENCES BRANCH(BranchNumber),
+    FOREIGN Key (Guarantee_accnt_no) REFERENCES GUARANTOR(Account_Number)
 );
-
-
-INSERT INTO EMPOLYEE VALUES (1,'1993-07-05','112@i.ac.in','2006-07-20','Nita','Rit','Soni',12221211,5,'Finance',3 );
-INSERT INTO EMPOLYEE VALUES (2,'1993-05-05','113@i.ac.in','2006-06-20','Neha','raj','S',12222323,4,'IT', NULL);
-INSERT INTO EMPOLYEE VALUES (3,'1995-06-05','114@i.ac.in','2006-08-20','Akhil','R','Ralla',45453343,3,'Finance', NULL);
-INSERT INTO EMPOLYEE VALUES (4,'1996-05-05','115@i.ac.in','2006-09-20','Anant','a','Aggarwal',134343434,2,'Security', NULL);
-
-
